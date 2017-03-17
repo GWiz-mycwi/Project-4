@@ -1,5 +1,5 @@
 /**
- * Filer v6 Styles
+ * Filer v4 Styles
  *
  * @author Kerri Shotts
  * @version 7.0.0
@@ -19,6 +19,14 @@
  * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * Project 3     Anthony Fernandez     Style.css       10Mar2017
+ *
+ * Modifications Log:
+ *    NAME        DATE            DESCRIPTION
+ * 1. Anthony     10Mar2017       Mod lines 222-238 font-size, padding, .android:color
+ * 2. Anthony     15Mar2017       Mod lines 23-26 added Modifications log
+ * 3. Anthony     15Mar2017       Mod lines 229-234 font-size, line-height, font-weight, color, float, padding-left
  */
 
 /* General styles */
@@ -215,6 +223,22 @@ body.android {
 .android .noteListView .ui-list-item:active .note-info {
   color: #242424;
 }
+/* position and style the status of the note */             /*CSS Change 1 Start 10Mar17 AMF */
+
+.noteListView .ui-list-item .note-status {
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 300;
+  color: rgba(87, 52, 32, 0.5);
+  float: right;
+  padding-left: 10px;
+}
+.noteListView .ui-list-item:active .note-status {
+  color: #FFFFFF;
+}
+.android .noteListView .ui-list-item:active .note-status {
+  color: #99CC00;
+}                                                          /*CSS Change 1 End 10Mar17 AMF */
 /* position and style the note information */
 
 .noteListView .ui-list-item .note-info {
@@ -292,38 +316,6 @@ body.android {
   height: -webkit-calc(100% - 100px);
   height: calc(100% - 100px);
 }
-/* For IMAGE and VIDEO NOTE EDIT VIEWs, it needs to be 200px shorter. */
-
-.ImageNoteEditView .ui-text-box,
-.VideoNoteEditView .ui-text-box {
-  /* Android < 4.4 doesn't understand calc, but in this case, it's fine; it'll get 100% */
-  height: -webkit-calc(100% - 200px);
-  height: calc(100% - 200px);
-  -webkit-transition: margin 0.3s ease-in-out, height 0.3s ease-in-out;
-  -moz-transition: margin 0.3s ease-in-out, height 0.3s ease-in-out;
-  -ms-transition: margin 0.3s ease-in-out, height 0.3s ease-in-out;
-  transition: margin 0.3s ease-in-out, height 0.3s ease-in-out;
-  background-color: #f1eee5;
-}
-.android .ImageNoteEditView .ui-text-box,
-.android .VideoNoteEditView .ui-text-box {
-  background-color: #e7ece6;
-}
-/* The text box slides up and over the image/video element when editing so as to give
-   sufficient space. */
-
-.ImageNoteEditView .ui-text-box.editing,
-.VideoNoteEditView .ui-text-box.editing {
-  height: 100%;
-  margin-top: -200px;
-  /* without these, android puts the text bux underneath the image/video */
-  -webkit-transform: translateZ(1px);
-  -moz-transform: translateZ(1px);
-  -ms-transform: translateZ(1px);
-  -o-transform: translateZ(1px);
-  transform: translateZ(1px);
-  position: absolute;
-}
 /*
  * AUDIO NOTE VIEW styles
  */
@@ -355,114 +347,4 @@ body.android {
   bottom: 10px;
   min-height: 0 !important;
   opacity: 0.5;
-}
-/*
- * IMAGE NOTE EDIT VIEW styles
- */
-
-/* style the container for the image */
-
-.ImageNoteEditView .image-container {
-  text-align: center;
-  background-color: #000;
-  border-bottom: 1px solid rgba(87, 52, 32, 0.25);
-  height: 200px;
-  background-position: center center;
-  background-size: contain;
-  position: relative;
-}
-.android .ImageNoteEditView .image-container {
-  background-color: #000;
-  border-bottom: 2px solid #484848;
-}
-/* any buttons inside -- like the camera button -- need to be
-   positioned absolutely */
-
-.ImageNoteEditView .image-container div {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  -webkit-mask-position-y: 100%;
-  -moz-mask-position-y: 100%;
-  -ms-mask-position-y: 100%;
-  mask-position-y: 100%;
-  background-color: white;
-}
-/* since masked icons can't have more than one color (+transparent),
-   we duplicate the icon with a different color so we can outline it.
-   The +1px enables the outline. That said, on Android < 4.4, the
-   outline isn't visible, due to the use of calc(). */
-
-.ImageNoteEditView .image-container div.outline {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  -webkit-mask-position-y: -webkit-calc(100% + 1px);
-  -webkit-mask-position-y: calc(100% + 1px);
-  -moz-mask-position-y: calc(100% + 1px);
-  -ms-mask-position-y: calc(100% + 1px);
-  mask-position-y: calc(100% + 1px);
-  background-color: black;
-}
-/* The share icon */
-
-div.ui-glyph.ui-background-tint-color.ui-glyph-share.outline,
-div.ui-glyph.ui-background-tint-color.ui-glyph-share.non-outline {
-  left: inherit;
-  width: 50px;
-  top: inherit;
-  height: 50px;
-}
-div.ui-glyph.ui-background-tint-color.ui-glyph-share.outline {
-  -webkit-mask-position: 15px 16px;
-  -moz-mask-position: 15px 16px;
-  -ms-mask-position: 15px 16px;
-  mask-position: 15px 16px;
-}
-div.ui-glyph.ui-background-tint-color.ui-glyph-share.non-outline {
-  -webkit-mask-position: 15px 15px;
-  -moz-mask-position: 15px 15px;
-  -ms-mask-position: 15px 15px;
-  mask-position: 15px 15px;
-}
-/*
- * VIDEO NOTE EDIT VIEW styles
- */
-
-/* style the video container */
-
-.VideoNoteEditView .video-container {
-  text-align: center;
-  background-color: #000;
-  height: 200px;
-  position: relative;
-}
-/* the video element inside needs to be 100% x 100% */
-
-.VideoNoteEditView .video-container .video-element video {
-  width: 100%;
-  height: 156px;
-}
-.android .VideoNoteEditView .video-container .video-element video {
-  height: 154px;
-}
-/* style the video actions bar */
-
-.VideoNoteEditView .video-container .video-actions {
-  height: 44px;
-  text-align: center;
-  line-height: 44px;
-  border-top: 1px solid rgba(87, 52, 32, 0.25);
-  border-bottom: 1px solid rgba(87, 52, 32, 0.25);
-}
-.android .VideoNoteEditView .video-container .video-actions {
-  height: 48px;
-  line-height: 48px;
-  background-color: #d7dcd6;
-  border-top: 2px solid #484848;
-  border-bottom: 2px solid #484848;
 }
