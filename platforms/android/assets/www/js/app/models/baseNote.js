@@ -21,6 +21,17 @@
  * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
+ * 
+ * Project 3     Anthony Fernandez     baseNote.js       10Mar2017
+ *
+ * Modifications Log:
+ *    NAME        DATE            DESCRIPTION
+ * 1. Anthony     10Mar2017       Mod lines 68 Added Register statusChanged notification
+ * 2. Anthony     10Mar2017       Mod lines 136-153 Added status Message
+ * 3. Anthony     10Mar2017       Mod lines 256 Add status to JSON
+ * 4. Anthony     15Mar2017       Mod lines 25-32 Added Modifications log
+ * 5. Anthony     15Mar2017       Mod lines 285 Added deserilizes the JSON String Status passed in
+ * 
  */
 /*jshint
          asi:true,
@@ -57,6 +68,7 @@ define( [ "yasmf" ], function( _y ) {
     self.registerNotification( "mediaContentsChanged" );
     self.registerNotification( "unitValueChanged" );
     self.registerNotification( "unitLabelsChanged" );
+    self.registerNotification( "statusChanged" );         /**Added Register statusChanged notification - Change 1 10Mar17 AMF*/
     /**
      * The note's unique identifier. getUID is the getter, and
      * setUID is the setter. Two properties can be used to
@@ -123,6 +135,24 @@ define( [ "yasmf" ], function( _y ) {
       set: self.setName,
       configurable: true
     } );
+    /**                                                     **Added status Message Change 1 Start Line 10Mar17 AMF    
+     * The visible status of the note. Read-write with setStatus and
+     * getStatus; the property is status.
+     */
+    self._status = "New";
+    self.getStatus = function() {
+      return self._status;
+    };
+    self.setStatus = function( theStatus ) {
+      self._status = theStatus;
+      self.notify( "statusChanged" );
+    };
+    Object.defineProperty( self, "status", {
+      get: self.getStatus,
+      set: self.setStatus,
+      configurable: true
+    } );
+    /**                                                     **Added status Message Change 1 End Line 10Mar17 AMF*/
     /**
      * Instead of the line count, we'll use a generic "unit". For the BaseNote, this
      * is still a line count, but other note types may use it differently.
@@ -224,6 +254,7 @@ define( [ "yasmf" ], function( _y ) {
         "uid": self.uid,
         "createdDate": self.createdDate,
         "modifiedDate": self.modifiedDate,
+        "Status": self.Status,                /** Add status to JSON Change 1 10mar17 AMF */
         "name": self.name,
         "textContents": self.textContents,
         "mediaContents": self.mediaContents,
@@ -252,6 +283,7 @@ define( [ "yasmf" ], function( _y ) {
         self.unitValue = aNote.unitValue; // so we don't have to recalc it
         // but assign this one last so we have the proper modification date
         self._modifiedDate = new Date( aNote.modifiedDate );
+        self.Status = aNote.Status;                              //Added deserilizes the JSON String Status passed in
         return true;
       } catch ( e ) {
         return false;

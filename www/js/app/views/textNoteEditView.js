@@ -4,7 +4,7 @@
  *
  * noteEditView.js
  * @author Kerri Shotts
- * @version 3.0.0
+ * @version 1.0.0
  *
  * Copyright (c) 2013 Packt Publishing
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this
@@ -21,6 +21,14 @@
  * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
+ * 
+ * *  Project 3     Anthony Fernandez     textNoteEditView.js       16Mar2017
+ *
+ *  Modifications Log:
+ *    NAME        DATE            DESCRIPTION
+ * 1. Anthony     16Mar2017       Mod lines 25-30 Added Modification log 
+ * 2. Anthony     16Mar2017       Mod lines 77-80 Added save the status change
+ * 
  */
 /*jshint
          asi:true,
@@ -57,7 +65,6 @@ define( [ "yasmf", "app/models/noteStorageSingleton",
     self._contentsEditor = null;
     self._backButton = null;
     self._deleteButton = null;
-    self._shareButton = null; // new for v6
     // the note we're editing
     self._note = null;
     /**
@@ -67,53 +74,26 @@ define( [ "yasmf", "app/models/noteStorageSingleton",
     self.saveNote = function() {
       self._note.name = self._nameEditor.innerText;
       self._note.textContents = self._contentsEditor.value;
+        var testing = ((document.getElementById("changeStatus")).options[(document.getElementById("changeStatus")).selectedIndex].value).toString();
+	      if ( testing != ""){ 
+		      self._note.setStatus(testing); 
+        };
       noteStorageSingleton.saveNote( self._note );
     };
     /**
-     * Delete the specific note.
+     * Delete the specific note. NO WARNING!
      */
     self.deleteNote = function() {
-      var areYouSure = new _y.UI.Alert();
-      areYouSure.initWithOptions( {
-        title: _y.T( "app.nev.action.DELETE_NOTE" ),
-        text: _y.T( "app.nev.action.ARE_YOU_SURE_THIS_ACTION_CANT_BE_UNDONE" ),
-        promise: true,
-        buttons: [ _y.UI.Alert.button( _y.T( "DELETE" ), {
-            type: "destructive"
-          } ),
-          _y.UI.Alert.button( _y.T( "CANCEL" ), {
-            type: "bold",
-            tag: -1
-          } )
-        ]
-      } );
-      areYouSure.show().then( function( idx ) {
-        if ( idx > -1 ) {
-          noteStorageSingleton.removeNote( self._note.uid );
-          // return to the previous view.
-          self.navigationController.popView();
-        }
-      } ).catch( function( anError ) {
-        return; // happens when a cancel button is pressed
-      } ).done();
-    };
+      noteStorageSingleton.removeNote( self._note.uid );
+      // return to the previous view.
+      self.navigationController.popView();
+    }
     /**
      * Go back to the previous view after saving the note.
      */
     self.goBack = function() {
       self.saveNote();
       self.navigationController.popView();
-    };
-    /**
-     * Share the note using the sharing plugin. New for v6.
-     */
-    self.shareNote = function() {
-      self.saveNote();
-      var message = {
-        subject: self._note.name,
-        text: self._note.textContents
-      };
-      window.socialmessage.send( message );
     };
     /**
      * Render the template, passing the note contents and
@@ -146,10 +126,6 @@ define( [ "yasmf", "app/models/noteStorageSingleton",
       self._contentsEditor = self.element.querySelector( ".ui-text-box" );
       Hammer( self._backButton ).on( "tap", self.goBack );
       Hammer( self._deleteButton ).on( "tap", self.deleteNote );
-      self._shareButton = self.element.querySelector( ".share-button" );
-      if ( self._shareButton !== null ) {
-        Hammer( self._shareButton ).on( "tap", self.shareNote );
-      }
       _y.UI.backButton.addListenerForNotification( "backButtonPressed", self.goBack );
     };
     /**
@@ -203,7 +179,6 @@ define( [ "yasmf", "app/models/noteStorageSingleton",
       self._scrollContainer = null;
       self._nameEditor = null;
       self._contentsEditor = null;
-      self._shareButton = null; // new for v6
       self.super( _className, "destroy" );
     };
     return self;
@@ -215,14 +190,6 @@ define( [ "yasmf", "app/models/noteStorageSingleton",
     "app.nev.DELETE_NOTE": {
       "EN": "Delete",
       "ES": "Eliminar"
-    },
-    "app.nev.action.DELETE_NOTE": {
-      "EN": "Delete Note",
-      "ES": "Eliminar Nota"
-    },
-    "app.nev.action.ARE_YOU_SURE_THIS_ACTION_CANT_BE_UNDONE": {
-      "EN": "Are you sure? This action can't be undone.",
-      "ES": "¿Está seguro? Esta acción no se puede deshacer."
     }
   } );
   return TextNoteEditView;
